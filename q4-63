@@ -1,0 +1,95 @@
+CREATE TABLE ARTIST (
+    ArtistID INT PRIMARY KEY,
+    Name VARCHAR(100),
+    StageName VARCHAR(100),
+    Email VARCHAR(100),
+    Phone VARCHAR(20),
+    EvalStatus VARCHAR(30)
+);
+CREATE TABLE MANAGER (
+    ManagerID INT PRIMARY KEY,
+    Name VARCHAR(100),
+    Email VARCHAR(100),
+    Phone VARCHAR(20)
+);
+CREATE TABLE ASSISTANT (
+    AssistantID INT PRIMARY KEY,
+    Name VARCHAR(100),
+    Email VARCHAR(100),
+    Phone VARCHAR(20),
+    ManagerID INT,
+    FOREIGN KEY (ManagerID) REFERENCES MANAGER(ManagerID)
+);
+CREATE TABLE MANAGED (
+    ArtistID INT,
+    ManagerID INT,
+    StartDate DATE,
+    RoyaltyRate DECIMAL(5,2),
+    PRIMARY KEY (ArtistID, ManagerID),
+    FOREIGN KEY (ArtistID) REFERENCES ARTIST(ArtistID),
+    FOREIGN KEY (ManagerID) REFERENCES MANAGER(ManagerID)
+);
+CREATE TABLE RECOMMENDATION (
+    RecID INT PRIMARY KEY,
+    ArtistID INT,
+    ManagerID INT,
+    Summary VARCHAR(255),
+    SourceType VARCHAR(50),
+    Quality VARCHAR(30),
+    FOREIGN KEY (ArtistID) REFERENCES ARTIST(ArtistID),
+    FOREIGN KEY (ManagerID) REFERENCES MANAGER(ManagerID)
+);
+CREATE TABLE EVENT (
+    EventID INT PRIMARY KEY,
+    Title VARCHAR(100),
+    Type VARCHAR(50),
+    Priority VARCHAR(20)
+);
+CREATE TABLE SCHEDULE (
+    SchedID INT PRIMARY KEY,
+    ArtistID INT,
+    EventID INT,
+    StartTime DATETIME,
+    EndTime DATETIME,
+    FOREIGN KEY (ArtistID) REFERENCES ARTIST(ArtistID),
+    FOREIGN KEY (EventID) REFERENCES EVENT(EventID)
+);
+CREATE TABLE EVENT_ORGANIZER (
+    OrganizerID INT PRIMARY KEY,
+    Name VARCHAR(100),
+    Organization VARCHAR(100),
+    Email VARCHAR(100),
+    Phone VARCHAR(20)
+);
+CREATE TABLE CONTRACT (
+    ContractID INT PRIMARY KEY,
+    ArtistID INT,
+    EventID INT,
+    OrganizerID INT,
+    ContractDate DATE,
+    FOREIGN KEY (ArtistID) REFERENCES ARTIST(ArtistID),
+    FOREIGN KEY (EventID) REFERENCES EVENT(EventID),
+    FOREIGN KEY (OrganizerID) REFERENCES EVENT_ORGANIZER(OrganizerID)
+);
+CREATE TABLE PAYMENT (
+    PaymentID INT PRIMARY KEY,
+    ContractID INT,
+    GrossFee DECIMAL(10,2),
+    Tax DECIMAL(10,2),
+    FAMEShare DECIMAL(10,2),
+    ArtistShare DECIMAL(10,2),
+    Country VARCHAR(50),
+    DatePaid DATE,
+    FOREIGN KEY (ContractID) REFERENCES CONTRACT(ContractID)
+);
+CREATE TABLE TRAVEL (
+    TravelID INT PRIMARY KEY,
+    ArtistID INT,
+    EventID INT,
+    ManagerID INT,
+    Cost DECIMAL(10,2),
+    FOREIGN KEY (ArtistID) REFERENCES ARTIST(ArtistID),
+    FOREIGN KEY (EventID) REFERENCES EVENT(EventID),
+    FOREIGN KEY (ManagerID) REFERENCES MANAGER(ManagerID)
+);
+
